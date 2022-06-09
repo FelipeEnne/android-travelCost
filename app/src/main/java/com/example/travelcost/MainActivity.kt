@@ -1,8 +1,10 @@
 package com.example.travelcost
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import com.example.travelcost.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
@@ -24,13 +26,26 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    private fun calculate() {
-        val distance = binding.editDistance.text.toString().toFloat()
-        val price = binding.editPrice.text.toString().toFloat()
-        val autonomy = binding.editAutonomy.text.toString().toFloat()
+    private fun isValid(): Boolean {
+        return (binding.editDistance.text.toString() != ""
+                && binding.editPrice.text.toString() != ""
+                && binding.editAutonomy.text.toString() != ""
+                && binding.editAutonomy.text.toString().toFloat() != 0f)
+    }
 
-        val totalValue = (distance*price)/autonomy
-        binding.textTotalValue.text = "R$ ${"%.2f".format(totalValue)}"
+    @SuppressLint("SetTextI18n")
+    private fun calculate() {
+        if(isValid()) {
+            val distance = binding.editDistance.text.toString().toFloat()
+            val price = binding.editPrice.text.toString().toFloat()
+            val autonomy = binding.editAutonomy.text.toString().toFloat()
+
+            val totalValue = (distance*price)/autonomy
+            binding.textTotalValue.text = "R$ ${"%.2f".format(totalValue)}"
+        } else {
+            Toast.makeText(this, getString(R.string.warning_fill_all_fields), Toast.LENGTH_LONG).show()
+        }
+
     }
 
 
